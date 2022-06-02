@@ -24,10 +24,21 @@
         justify-content: space-around;
         align-items: center;
 
+        // background-color: green;
+
         .step {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            // background-color: blue;
             position: relative;
-            background-color: white;
-            padding: 0 7px;
+            top: 10px;
+
+            .step-number-span-wrapper {
+                padding: 0 7px;
+                background-color: white;
+            }
 
             .step-number-span {
                 display: inline-block;
@@ -49,33 +60,12 @@
                 }                
             }
 
-            &.not-active {
-                .step-number-span {
-                    transition-delay: 0.3s;
-                    background-color: rgb(212, 212, 212);
-                    color: rgb(134, 134, 134);
-                } 
-            }
-
             .step-name-span {
-                position: absolute;
+                margin-top: 7px;
                 font-family: Muli, sans-serif;
                 font-weight: 600;
                 color: rgb(10,10,10);
-            }
-        }
-
-        .step-1 {
-          .step-name-span {
-                left: -6px;
-                bottom: -18px;
-            }
-        }
-
-        .step-2 {
-            .step-name-span {
-                left: -40px;
-                bottom: -18px;
+                white-space: pre;
             }
         }
 

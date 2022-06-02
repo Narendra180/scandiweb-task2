@@ -4,12 +4,19 @@ import ProgressBar from 'Component/ProgressBar.component';
 import './Checkout.override.style.scss';
 
 export class CheckoutComponent extends SourceCheckout {
+
+
     render() {
-        console.log(this.props.checkoutStep,"helllllo");
         return (
             <main block="Checkout">
                 <ProgressBar 
-                    step={this.props.checkoutStep}
+                    activeStep={this.props.checkoutStep}
+                    allSteps={
+                        [{stepName: "SHIPPING_STEP",stepNumber: 1, stepContent: "Shipping"},
+                         {stepName: "BILLING_STEP",stepNumber: 2, stepContent: "Review & Payments"},
+                         {stepName: "DETAILS_STEP",stepNumber: 3, stepContent: ""}
+                        ]
+                    }
                 />
                 <ContentWrapper
                   wrapperMix={ { block: 'Checkout', elem: 'Wrapper' } }

@@ -3,45 +3,43 @@ import "./ProgressBar.style.scss";
 
 class ProgressBar extends React.Component {
 
+    constructor(props) {
+        super(props);
+
+        this.previousStep = 0;
+    }
+
     componentDidMount() {
-        this.steps = {"SHIPPING_STEP": 1, "BILLING_STEP": 2, "DETAILS_STEP": 3};
-        this.totalSteps = 3;
-        this.setActiveStepIndicatorAndStep();
+        this.setActiveClasses();
     }
 
     componentDidUpdate() {
-        this.setActiveStepIndicatorAndStep();
+        this.setActiveClasses();
     }
 
-    modifyStepActiveClasses = (currentActiveStep) => {
-        for(let i = 1; i < this.totalSteps; i++) {
-            // console.log(i,this.steps[this.props.step])
-            document.querySelector(`.step-${i}`).classList.add("active");
-            if(i > this.steps[this.props.step]) {
-                document.querySelector(`.step-${i}`).classList.remove("active");
-                // console.log(i>this.steps[this.props.step],document.querySelector(`.step-${i}`));
-            }
-        }
+    findActiveStepNumber(arr,stepName) {
+        const resultObj = arr.find((stepObj) => {
+            return stepObj.stepName === stepName;
+        });
+        return resultObj.stepNumber;
     }
 
-    setActiveStepIndicatorAndStep = () => {
-        const step1 = document.querySelector(".step-1");
-        const step2 = document.querySelector(".step-2");
+    setActiveClasses = () => {
         const activeProgressLine = document.querySelector(".active-progress-line");
+        const activeStepNumber = this.findActiveStepNumber(this.props.allSteps,this.props.activeStep)-1;
+        const stepElement = document.querySelector(`.step-${activeStepNumber}`);
+        if(activeStepNumber < this.props.allSteps.length-1) {
+            activeProgressLine.style.width = stepElement.offsetLeft+(stepElement.offsetWidth/2)+"px";
+        } else {
+            activeProgressLine.style.width = "100%";
+        }
 
-        switch(this.props.step) {
-            case "SHIPPING_STEP":              
-                activeProgressLine.style.width = step1.offsetLeft+30+"px";
-                this.modifyStepActiveClasses(this.steps["SHIPPING_STEP"]);
-                break;
-            case "BILLING_STEP":
-                activeProgressLine.style.width = step2.offsetLeft+30+"px";
-                this.modifyStepActiveClasses(this.steps["BILLING_STEP"]);
-                break;
-            case "DETAILS_STEP":
-                activeProgressLine.style.width = "100%";
-                break;
-            default:
+        for(let i = 0; i < this.props.allSteps.length-1; i++) {
+            if(i <= activeStepNumber) {
+                document.querySelector(`.step-${i}`).classList.add("active");
+            } else {
+                document.querySelector(`.step-${i}`).classList.remove("active");
+            }
         }
     }
 
@@ -53,14 +51,21 @@ class ProgressBar extends React.Component {
                 <div className='progress-bar'>
                     <div className='progress-indicator-line line '></div>
                     <div className='active-progress-line line'></div>
-                    <div className='step step-1'>
-                        <span className='step-number-span'>1</span>
-                        <span className='step-name-span'>Shipping</span>
-                    </div>
-                    <div className='step step-2'>
-                        <span className='step-number-span'>2</span>
-                        <span className='step-name-span'>Review&nbsp;&amp;&nbsp;Payments</span>
-                    </div>
+
+                    {
+                        this.props.allSteps.map((stepObj,i) => {
+                            if(i < this.props.allSteps.length-1)
+                                return (
+                                    <div className={`step step-${i}`} key={i}>
+                                        <div className='step-number-span-wrapper'>
+                                            <span className='step-number-span'>{stepObj.stepNumber}</span>
+                                        </div>
+                                        <span className='step-name-span'>{stepObj.stepContent}</span>
+                                    </div>
+                                )
+                        })
+                    }
+                    
                 </div>                
             </div>
         );
